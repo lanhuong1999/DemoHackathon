@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">DemoHackathon</string>
+    <string name="dialog_negative_button_name">Hủy</string>
+    <string name="dialog_positive_button_name">Đồng ý</string>
 </resources>

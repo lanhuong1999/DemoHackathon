@@ -3,6 +3,9 @@ package com.vnpay.demohackathon.utils.extensions
 import android.os.SystemClock
 import android.util.Log
 import android.view.View
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.vnpay.demohackathon.utils.Utils
 
 class SafeClickListener(
     private var defaultInterval: Int = 100,
@@ -28,4 +31,11 @@ fun View.setSafeOnClickListener(onSafeClick: (View) -> Unit) {
         }
     }
 }
+
+fun Any.toGson(): String {
+    return Utils.g().provideGson().toJson(this)
+}
+
+inline fun <reified T> Gson.fromJson(json: String) =
+    this.fromJson<T>(json, object : TypeToken<T>() {}.type)
 

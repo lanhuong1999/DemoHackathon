@@ -22,7 +22,7 @@ abstract class BaseActivity<T: ViewBinding>: AppCompatActivity() {
     protected abstract fun initData()
     protected abstract fun initAction()
 
-    protected fun showDialog(title: String, msg: String?, listener: OnDialogClickListener?): Dialog {
+    protected fun createDialog(title: String, msg: String?, listener: OnDialogClickListener?): Dialog {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(title)
             .setMessage(msg)

@@ -4,7 +4,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.vnpay.demohackathon.utils.extensions.setSafeOnClickListener
 
-class BaseRclvVH<T>(itemView: View) : ViewHolder(itemView), IOnBind<T> {
+abstract class BaseRclvVH<T>(itemView: View) : ViewHolder(itemView), IOnBind<T> {
 
     init {
         onInitView(itemView)

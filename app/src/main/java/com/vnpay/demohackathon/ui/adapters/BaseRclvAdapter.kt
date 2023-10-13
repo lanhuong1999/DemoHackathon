@@ -44,7 +44,7 @@ abstract class BaseRclvAdapter : RecyclerView.Adapter<BaseRclvVH<Any?>>() {
         mDataSet.add(item)
     }
 
-    fun addItems(items: List<Any>?) {
+    fun addItems(items: List<Any?>?) {
         if (items.isNullOrEmpty()) {
             return
         }
@@ -82,9 +82,10 @@ abstract class BaseRclvAdapter : RecyclerView.Adapter<BaseRclvVH<Any?>>() {
         notifyItemRemoved(index)
     }
 
-    open fun reset(newItems: List<Any>?) {
+    open fun reset(newItems: List<*>?) {
         mDataSet.clear()
         addItems(newItems)
+        notifyDataSetChanged()
     }
 
     fun remove(index: Int) {

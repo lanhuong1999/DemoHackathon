@@ -3,8 +3,8 @@ package com.vnpay.demohackathon.data
 import android.widget.ImageView
 
 data class Photo(
-    val url: String,
-    val reqWidth: Int,
-    val reqHeight: Int,
-    val imageView: ImageView
+    var url: String? = null,
+    var reqWidth: Int? = null,
+    var reqHeight: Int? = null,
+    var imageView: ImageView? = null
 )

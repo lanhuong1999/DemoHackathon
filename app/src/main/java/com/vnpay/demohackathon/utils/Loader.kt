@@ -1,10 +1,11 @@
 package com.vnpay.demohackathon.utils
 
 import android.app.Activity
+import android.content.Context
 import com.vnpay.demohackathon.data.Photo
 
 class Loader(
-    private val activity: Activity,
+    private val context: Context,
     private val photo: Photo,
 ): Runnable {
 
@@ -12,7 +13,7 @@ class Loader(
         val bitmap = Utils.g().getBitmap(photo.url, photo.reqWidth, photo.reqHeight)
         if (bitmap != null) {
             MemoryCache.put(photo.url, bitmap)
-            activity.runOnUiThread {
+            (context as Activity).runOnUiThread {
                 photo.imageView.setImageBitmap(bitmap)
             }
         }

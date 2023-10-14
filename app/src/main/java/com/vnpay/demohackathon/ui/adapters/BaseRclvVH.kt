@@ -1,10 +1,10 @@
 package com.vnpay.demohackathon.ui.adapters
 
 import android.view.View
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import androidx.recyclerview.widget.RecyclerView
 import com.vnpay.demohackathon.utils.extensions.setSafeOnClickListener
 
-abstract class BaseRclvVH<T>(itemView: View) : ViewHolder(itemView), IOnBind<T> {
+abstract class BaseRclvVH<T>(itemView: View) : RecyclerView.ViewHolder(itemView), IOnBind<T> {
 
     init {
         onInitView(itemView)

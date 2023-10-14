@@ -1,6 +1,7 @@
 package com.vnpay.demohackathon.utils
 
 import android.app.Activity
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.vnpay.demohackathon.data.Photo
@@ -47,18 +48,18 @@ class Utils private constructor() {
         return BitmapFactory.decodeStream(FileInputStream(file), null, o)
     }
 
-    fun loadImage(activity: Activity, photo: Photo) {
+    fun loadImage(context: Context, photo: Photo) {
        val bitmap = MemoryCache.get(photo.url)
        if (bitmap != null) {
            photo.imageView.setImageBitmap(bitmap)
        }
        else {
-           queuePhoto(activity, photo)
+           queuePhoto(context, photo)
        }
     }
 
-    private fun queuePhoto(activity: Activity, photo: Photo) {
-        val loader = Loader(activity, photo)
+    private fun queuePhoto(context: Context, photo: Photo) {
+        val loader = Loader(context, photo)
         executorService.submit(loader)
     }
 }

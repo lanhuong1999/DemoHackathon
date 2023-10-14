@@ -36,7 +36,7 @@ class DisplayImageAdapter : LoadMoreAdapter() {
         reset(itemList)
     }
 
-    inner class DisplayImageViewHolder(itemView: View) : BaseRclvVH<ImageSelectVHData>(itemView) {
+    inner class DisplayImageViewHolder(itemView: View) : BaseRclvVH<Any>(itemView) {
         private val image: ImageView = itemView.findViewById(R.id.ivImage)
         private val icCheck: ImageView = itemView.findViewById(R.id.ivCheck)
 
@@ -57,17 +57,19 @@ class DisplayImageAdapter : LoadMoreAdapter() {
             }
         }
 
-        override fun onBind(data: ImageSelectVHData) {
-            val photo = Photo(data.realData ?: "", 100, 100, image)
-            Utils.g().loadImage(itemView.context, photo)
-            if (isShowCheck && !data.isCheck) {
-                icCheck.isVisible = true
-                icCheck.setImageResource(R.drawable.ic_radio_button_unselected)
-            } else if (isShowCheck && data.isCheck) {
-                icCheck.isVisible = true
-                icCheck.setImageResource(R.drawable.ic_radio_button_check)
-            } else {
-                icCheck.isVisible = false
+        override fun onBind(data: Any) {
+            if(data is ImageSelectVHData) {
+                val photo = Photo(data.realData ?: "", 500, 500, image)
+                Utils.g().loadImage(itemView.context, photo)
+                if (isShowCheck && !data.isCheck) {
+                    icCheck.isVisible = true
+                    icCheck.setImageResource(R.drawable.ic_radio_button_unselected)
+                } else if (isShowCheck && data.isCheck) {
+                    icCheck.isVisible = true
+                    icCheck.setImageResource(R.drawable.ic_radio_button_check)
+                } else {
+                    icCheck.isVisible = false
+                }
             }
         }
 

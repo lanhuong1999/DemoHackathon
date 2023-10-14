@@ -49,9 +49,14 @@ class Utils private constructor() {
         val file = File(url)
         val o = BitmapFactory.Options()
         o.inJustDecodeBounds = true
+        BitmapFactory.decodeStream(FileInputStream(file), null, o)
         val size = calculateInSampleSize(o, reqWidth, reqHeight)
-        o.inSampleSize = size
-        return BitmapFactory.decodeStream(FileInputStream(file), null, o)
+        val o2 =  BitmapFactory.Options()
+        o2.inSampleSize = size
+        val inputStream = FileInputStream(file)
+        val bitmap = BitmapFactory.decodeStream(inputStream, null, o2)
+        inputStream.close()
+        return bitmap
     }
 
     fun loadImage(context: Context, photo: Photo) {

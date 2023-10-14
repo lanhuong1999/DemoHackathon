@@ -32,9 +32,7 @@ fun View.setSafeOnClickListener(onSafeClick: (View) -> Unit) {
     }
 }
 
-fun Any.toGson(): String {
-    return Utils.g().provideGson().toJson(this)
-}
+
 
 inline fun <reified T> Gson.fromJson(json: String) =
     this.fromJson<T>(json, object : TypeToken<T>() {}.type)

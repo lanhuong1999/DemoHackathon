@@ -9,8 +9,8 @@ import com.vnpay.demohackathon.data.model.ImageEnitity
 
 object GalleryRepo {
 
-    fun getListImages(context:Context, limit:Int, page:Int):MutableList<ImageEnitity>{
-        val list = mutableListOf<ImageEnitity>()
+    fun getListImages(context:Context, limit:Int, page:Int):MutableList<String>{
+        val list = mutableListOf<String>()
 
         val resolver = context.contentResolver
         val externalUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
@@ -59,10 +59,7 @@ object GalleryRepo {
                     val path =
                         cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA))
 
-                    list.add(ImageEnitity().apply {
-                        this.id = id
-                        this.path = path
-                    })
+                    list.add(path)
                 } while (cursor.moveToNext())
             }
         }

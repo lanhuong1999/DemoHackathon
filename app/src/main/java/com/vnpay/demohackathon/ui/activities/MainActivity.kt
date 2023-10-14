@@ -2,20 +2,19 @@ package com.vnpay.demohackathon.ui.activities
 
 import android.Manifest
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.os.PersistableBundle
 import androidx.core.app.ActivityCompat
-import com.vnpay.demohackathon.R
 import com.vnpay.demohackathon.bases.BaseActivity
+import com.vnpay.demohackathon.data.GalleryRepo
 import com.vnpay.demohackathon.databinding.ActivityMainBinding
+import com.vnpay.demohackathon.ui.adapters.LoadMoreRecyclerView
 
-class MainActivity(): BaseActivity<ActivityMainBinding>() {
+class MainActivity() : BaseActivity<ActivityMainBinding>() {
     override val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private var page = 0
     private var limit = 20
     private var isLoading: Boolean = false
     private var stillMore: Boolean = false
+    private val displayImageAdapter : DisplayImageAdapter by lazy { DisplayImageAdapter() }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -27,6 +26,7 @@ class MainActivity(): BaseActivity<ActivityMainBinding>() {
             initData()
         }
     }
+
     override fun initView() {
         if (ActivityCompat.checkSelfPermission(
                 this, Manifest.permission.READ_MEDIA_IMAGES
@@ -48,9 +48,35 @@ class MainActivity(): BaseActivity<ActivityMainBinding>() {
         page = 0
         stillMore = true
         isLoading = false
+        binding.rclDisplay.adapter = displayImageAdapter
+        loadImage()
+    }
+
+    private fun loadImage(){
+        val list = GalleryRepo.getListImages(this,limit,page)
+        displayImageAdapter.enableLoadMore(true)
+        displayImageAdapter.resetData(list)
+        binding.rclDisplay.setLoadDataListener(object : LoadMoreRecyclerView.IOnLoadMoreRecyclerViewListener {
+            override fun onLoadData() {
+                val listNext = GalleryRepo.getListImages(this@MainActivity, limit, ++page)
+                val isHasMore = listNext.isNullOrEmpty() || listNext.size < limit
+                if (listNext.isNullOrEmpty()) {
+                    displayImageAdapter.addMoreItem(listNext, true)
+                }
+                else {
+                    displayImageAdapter.showLoadMore(false)
+                }
+            }
+
+            override fun onLoadEmptyData(isEmpty: Boolean) {
+            }
+
+        })
+
     }
 
     override fun initAction() {
 
     }
+
 }

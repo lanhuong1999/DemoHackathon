@@ -1,24 +1,20 @@
 package com.vnpay.demohackathon.utils
 
-import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.vnpay.demohackathon.data.Photo
 import java.io.File
 import java.io.FileInputStream
+import java.net.URL
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import java.net.URL
 
 class Utils private constructor() {
 
     companion object {
         private var instance: Utils? = null
-        private const val NUM_THREAD = 20
+        const val NUM_THREAD = 20
         val executorService: ExecutorService = Executors.newFixedThreadPool(NUM_THREAD)
 
         @JvmStatic
@@ -30,10 +26,6 @@ class Utils private constructor() {
 
     //viết các hàm xử lý dùng ở nhiều nơi
 
-    fun provideGson(): Gson {
-        if (gson == null) gson = GsonBuilder().disableHtmlEscaping().create()
-        return gson!!
-    }
 
     fun getBitmapFromUrl(url: String): Bitmap {
         val url1 = URL(url)

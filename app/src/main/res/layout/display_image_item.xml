@@ -24,6 +24,7 @@
         app:layout_constraintTop_toTopOf="@+id/ivImage"
         app:layout_constraintEnd_toEndOf="@id/ivImage"
         android:src="@drawable/ic_radio_button_check"
+        android:visibility="gone"
         android:layout_margin="5dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

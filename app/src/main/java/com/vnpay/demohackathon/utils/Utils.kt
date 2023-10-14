@@ -17,7 +17,7 @@ class Utils private constructor() {
 
     companion object {
         private var instance: Utils? = null
-        const val NUM_THREAD = 20
+        const val NUM_THREAD = 4
         val executorService: ExecutorService = Executors.newFixedThreadPool(NUM_THREAD)
         val views = Collections.synchronizedMap(WeakHashMap<ImageView, String>())
 

@@ -9,9 +9,6 @@
     <com.vnpay.demohackathon.ui.adapters.LoadMoreRecyclerView
         android:id="@+id/rclDisplay"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:spanCount="3"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"/>
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

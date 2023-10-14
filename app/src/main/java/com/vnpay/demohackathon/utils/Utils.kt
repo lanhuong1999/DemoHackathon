@@ -50,6 +50,7 @@ class Utils private constructor() {
         val o = BitmapFactory.Options()
         BitmapFactory.decodeFile(file.path, o)
         o.inJustDecodeBounds = true
+        BitmapFactory.decodeStream(FileInputStream(file), null, o)
         val size = calculateInSampleSize(o, reqWidth, reqHeight)
         val o2 =  BitmapFactory.Options()
         o2.inSampleSize = size

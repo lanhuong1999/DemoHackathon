@@ -18,7 +18,6 @@ class DisplayImageAdapter : LoadMoreAdapter() {
     var longClickedItem: ((Any?) -> Unit)? = null
     private val isShowCheck = false
     private val countCheck = 0
-    private val photo: Photo by lazy { Photo() }
     override fun getLayoutResByViewType(viewType: Int): Int {
         return R.layout.display_image_item
     }
@@ -59,10 +58,7 @@ class DisplayImageAdapter : LoadMoreAdapter() {
         }
 
         override fun onBind(data: ImageSelectVHData) {
-            photo.url = data.realData ?: ""
-            photo.reqHeight = 80
-            photo.reqWidth = 80
-            photo.imageView = image
+            val photo = Photo(data.realData ?: "", 100, 100, image)
             Utils.g().loadImage(itemView.context, photo)
             if (isShowCheck && !data.isCheck) {
                 icCheck.isVisible = true

@@ -8,6 +8,10 @@ import com.vnpay.demohackathon.bases.BaseActivity
 import com.vnpay.demohackathon.data.GalleryRepo
 import com.vnpay.demohackathon.databinding.ActivityMainBinding
 import com.vnpay.demohackathon.ui.adapters.LoadMoreRecyclerView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity() : BaseActivity<ActivityMainBinding>() {
     override val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
@@ -15,7 +19,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>() {
     private var limit = 20
     private var isLoading: Boolean = false
     private var stillMore: Boolean = false
-    private val displayImageAdapter : DisplayImageAdapter by lazy { DisplayImageAdapter() }
+    private val displayImageAdapter: DisplayImageAdapter by lazy { DisplayImageAdapter() }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -23,7 +27,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (grantResults.isNotEmpty()&& requestCode == 1000 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (grantResults.isNotEmpty() && requestCode == 1000 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             initData()
         }
     }
@@ -54,19 +58,15 @@ class MainActivity() : BaseActivity<ActivityMainBinding>() {
         loadImage()
     }
 
-    private fun loadImage(){
-        val list = GalleryRepo.getListImages(this,limit,page)
+    private fun loadImage() {
+        val list = GalleryRepo.getListImages(this, limit, page)
         page++
         displayImageAdapter.enableLoadMore(true)
         displayImageAdapter.resetData(list)
-        binding.rclDisplay.setLoadDataListener(object : LoadMoreRecyclerView.IOnLoadMoreRecyclerViewListener {
+        binding.rclDisplay.setLoadDataListener(object :
+            LoadMoreRecyclerView.IOnLoadMoreRecyclerViewListener {
             override fun onLoadData() {
-                val listNext = GalleryRepo.getListImages(this@MainActivity, limit, page)
-                val isLastPage = listNext.isNullOrEmpty() || listNext.size < limit
-                if (!listNext.isNullOrEmpty()) {
-                    displayImageAdapter.addMoreItem(listNext, !isLastPage)
-                    page++
-                }
+                loadImageData()
             }
 
             override fun onLoadEmptyData(isEmpty: Boolean) {
@@ -78,6 +78,17 @@ class MainActivity() : BaseActivity<ActivityMainBinding>() {
 
     override fun initAction() {
 
+    }
+
+    fun loadImageData() = GlobalScope.launch(Dispatchers.IO) {
+        val listNext = GalleryRepo.getListImages(this@MainActivity, limit, page)
+        val isLastPage = listNext.isNullOrEmpty() || listNext.size < limit
+        if (!listNext.isNullOrEmpty()) {
+            withContext(Dispatchers.Main) {
+                displayImageAdapter.addMoreItem(listNext, !isLastPage)
+                page++
+            }
+        }
     }
 
 }

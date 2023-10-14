@@ -14,10 +14,15 @@ import com.vnpay.demohackathon.utils.extensions.setSafeOnClickListener
 
 class DisplayImageAdapter : LoadMoreAdapter() {
 
+    companion object {
+        const val PAYLOAD_SELECT = "PAYLOAD_SELECT"
+    }
+
     var clickedItem: ((Any?) -> Unit)? = null
     var longClickedItem: ((Any?) -> Unit)? = null
     private val isShowCheck = false
     private val countCheck = 0
+    private val listSelect = mutableListOf<ImageSelectVHData>()
     override fun getLayoutResByViewType(viewType: Int): Int {
         return R.layout.display_image_item
     }
@@ -51,14 +56,23 @@ class DisplayImageAdapter : LoadMoreAdapter() {
             itemView.setOnLongClickListener {
                 val position = adapterPosition
                 if (position > -1) {
-                    longClickedItem?.invoke(mDataSet[position])
+//                    longClickedItem?.invoke(mDataSet[position])
+                    val item = mDataSet[position] as? ImageSelectVHData
+                    if (item != null) {
+                        if (!item.isCheck) {
+                            item.isCheck = true
+                            listSelect.add(item)
+                            notifyItemChanged(adapterPosition, PAYLOAD_SELECT)
+                        }
+
+                    }
                 }
                 true
             }
         }
 
         override fun onBind(data: Any) {
-            if(data is ImageSelectVHData) {
+            if (data is ImageSelectVHData) {
                 val photo = Photo(data.realData ?: "", 500, 500, image)
                 Utils.g().loadImage(itemView.context, photo)
                 if (isShowCheck && !data.isCheck) {
@@ -72,6 +86,19 @@ class DisplayImageAdapter : LoadMoreAdapter() {
                 }
             }
         }
+
+        override fun onBind(data: Any, payload: List<Any>) {
+            if (payload.isEmpty()){
+                super.onBind(data, payload)
+            }else{
+                payload.forEach {
+                    if (it is Int && it == PAYLOAD_SELECT) {
+
+                    }
+                }
+            }
+        }
+
 
     }
 

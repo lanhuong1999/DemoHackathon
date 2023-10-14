@@ -12,6 +12,10 @@ import com.vnpay.demohackathon.bases.BaseActivity
 import com.vnpay.demohackathon.data.GalleryRepo
 import com.vnpay.demohackathon.databinding.ActivityMainBinding
 import com.vnpay.demohackathon.ui.adapters.LoadMoreRecyclerView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity() : BaseActivity<ActivityMainBinding>() {
     override val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
@@ -68,14 +72,10 @@ class MainActivity() : BaseActivity<ActivityMainBinding>() {
         page++
         displayImageAdapter.enableLoadMore(true)
         displayImageAdapter.resetData(list)
-        binding.rclDisplay.setLoadDataListener(object : LoadMoreRecyclerView.IOnLoadMoreRecyclerViewListener {
+        binding.rclDisplay.setLoadDataListener(object :
+            LoadMoreRecyclerView.IOnLoadMoreRecyclerViewListener {
             override fun onLoadData() {
-                val listNext = GalleryRepo.getListImages(this@MainActivity, limit, page)
-                val isLastPage = listNext.isNullOrEmpty() || listNext.size < limit
-                if (!listNext.isNullOrEmpty()) {
-                    displayImageAdapter.addMoreItem(listNext, !isLastPage)
-                    page++
-                }
+                loadImageData()
             }
 
             override fun onLoadEmptyData(isEmpty: Boolean) {
@@ -91,4 +91,14 @@ class MainActivity() : BaseActivity<ActivityMainBinding>() {
         }
     }
 
+    fun loadImageData() = GlobalScope.launch(Dispatchers.IO) {
+        val listNext = GalleryRepo.getListImages(this@MainActivity, limit, page)
+        val isLastPage = listNext.isNullOrEmpty() || listNext.size < limit
+        if (!listNext.isNullOrEmpty()) {
+            withContext(Dispatchers.Main) {
+                displayImageAdapter.addMoreItem(listNext, !isLastPage)
+                page++
+            }
+        }
+    }
 }

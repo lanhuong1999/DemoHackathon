@@ -27,6 +27,16 @@ class DisplayImageAdapter : LoadMoreAdapter() {
         return DisplayImageViewHolder(itemView)
     }
 
+    fun resetData(data: List<String>) {
+        val itemList = mutableListOf<ImageSelectVHData>()
+        data.forEachIndexed { index, item ->
+            itemList.add(ImageSelectVHData(item).apply {
+                isCheck = false
+            })
+        }
+        reset(itemList)
+    }
+
     inner class DisplayImageViewHolder(itemView: View) : BaseRclvVH<ImageSelectVHData>(itemView) {
         private val image: ImageView = itemView.findViewById(R.id.ivImage)
         private val icCheck: ImageView = itemView.findViewById(R.id.ivCheck)

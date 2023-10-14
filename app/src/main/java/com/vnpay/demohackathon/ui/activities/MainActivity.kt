@@ -1,7 +1,11 @@
 package com.vnpay.demohackathon.ui.activities
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
+import android.provider.Settings
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.vnpay.demohackathon.bases.BaseActivity
@@ -15,7 +19,22 @@ class MainActivity() : BaseActivity<ActivityMainBinding>() {
     private var limit = 20
     private var isLoading: Boolean = false
     private var stillMore: Boolean = false
-    private val displayImageAdapter : DisplayImageAdapter by lazy { DisplayImageAdapter() }
+    private val displayImageAdapter: DisplayImageAdapter by lazy { DisplayImageAdapter() }
+
+    private val permissionResult =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            if (it) {
+                setData()
+            } else {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(
+                        Manifest.permission.READ_MEDIA_IMAGES
+                    ),
+                    1000
+                )
+            }
+        }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -23,29 +42,19 @@ class MainActivity() : BaseActivity<ActivityMainBinding>() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (grantResults.isNotEmpty()&& requestCode == 1000 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (grantResults.isNotEmpty() && requestCode == 1000 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             initData()
         }
     }
 
     override fun initView() {
-        if (ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.READ_MEDIA_IMAGES
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(
-                    Manifest.permission.READ_MEDIA_IMAGES
-                ),
-                1000
-            )
-        } else {
-            initData()
-        }
+        permissionResult.launch(Manifest.permission.READ_MEDIA_IMAGES)
     }
 
     override fun initData() {
+    }
+
+    private fun setData(){
         page = 0
         stillMore = true
         isLoading = false
@@ -54,8 +63,8 @@ class MainActivity() : BaseActivity<ActivityMainBinding>() {
         loadImage()
     }
 
-    private fun loadImage(){
-        val list = GalleryRepo.getListImages(this,limit,page)
+    private fun loadImage() {
+        val list = GalleryRepo.getListImages(this, limit, page)
         page++
         displayImageAdapter.enableLoadMore(true)
         displayImageAdapter.resetData(list)
@@ -77,7 +86,9 @@ class MainActivity() : BaseActivity<ActivityMainBinding>() {
     }
 
     override fun initAction() {
-
+        displayImageAdapter.clickedItem = {
+            startActivity(DetailImageDisplayActivity.getIntent(this, it))
+        }
     }
 
 }

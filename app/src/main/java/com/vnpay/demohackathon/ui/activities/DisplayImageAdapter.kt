@@ -14,7 +14,7 @@ import com.vnpay.demohackathon.utils.extensions.setSafeOnClickListener
 
 class DisplayImageAdapter : LoadMoreAdapter() {
 
-    var clickedItem: ((Any?) -> Unit)? = null
+    var clickedItem: ((String?) -> Unit)? = null
     var longClickedItem: ((Any?) -> Unit)? = null
     private val isShowCheck = false
     private val countCheck = 0
@@ -41,10 +41,10 @@ class DisplayImageAdapter : LoadMoreAdapter() {
         private val icCheck: ImageView = itemView.findViewById(R.id.ivCheck)
 
         init {
-            itemView.setSafeOnClickListener {
+            itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position > -1) {
-                    clickedItem?.invoke(mDataSet[position])
+                    clickedItem?.invoke((mDataSet[position] as ImageSelectVHData).realData)
                 }
             }
 

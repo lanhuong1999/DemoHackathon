@@ -22,18 +22,6 @@ abstract class BaseActivity<T: ViewBinding>: AppCompatActivity() {
         initAction()
     }
 
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 1000 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-        }
-    }
-
     protected abstract fun initView()
     protected abstract fun initData()
     protected abstract fun initAction()

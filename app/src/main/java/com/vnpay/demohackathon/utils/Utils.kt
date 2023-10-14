@@ -49,9 +49,9 @@ class Utils private constructor() {
     }
 
     fun loadImage(context: Context, photo: Photo) {
-       val bitmap = MemoryCache.get(photo.url)
+       val bitmap = MemoryCache.get(photo.url ?: "")
        if (bitmap != null) {
-           photo.imageView.setImageBitmap(bitmap)
+           photo.imageView?.setImageBitmap(bitmap)
        }
        else {
            queuePhoto(context, photo)

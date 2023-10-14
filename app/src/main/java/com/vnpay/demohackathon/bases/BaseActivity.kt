@@ -1,10 +1,14 @@
 package com.vnpay.demohackathon.bases
 
+import android.Manifest
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.viewbinding.ViewBinding
 import com.vnpay.demohackathon.R
 
@@ -16,6 +20,18 @@ abstract class BaseActivity<T: ViewBinding>: AppCompatActivity() {
         initView()
         initData()
         initAction()
+    }
+
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 1000 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+        }
     }
 
     protected abstract fun initView()

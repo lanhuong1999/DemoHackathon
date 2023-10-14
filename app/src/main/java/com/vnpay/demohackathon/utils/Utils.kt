@@ -1,11 +1,12 @@
 package com.vnpay.demohackathon.utils
 
-import android.app.Activity
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.vnpay.demohackathon.data.Photo
 import java.io.File
 import java.io.FileInputStream
+import java.net.URL
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -13,7 +14,7 @@ class Utils private constructor() {
 
     companion object {
         private var instance: Utils? = null
-        private const val NUM_THREAD = 20
+        const val NUM_THREAD = 20
         val executorService: ExecutorService = Executors.newFixedThreadPool(NUM_THREAD)
 
         @JvmStatic
@@ -24,6 +25,12 @@ class Utils private constructor() {
     }
 
     //viết các hàm xử lý dùng ở nhiều nơi
+
+
+    fun getBitmapFromUrl(url: String): Bitmap {
+        val url1 = URL(url)
+        return BitmapFactory.decodeStream(url1.openConnection().getInputStream())
+    }
 
     private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
         val (height: Int, width: Int) = options.run { outHeight to outWidth }
@@ -52,18 +59,18 @@ class Utils private constructor() {
         return bitmap
     }
 
-    fun loadImage(activity: Activity, photo: Photo) {
-       val bitmap = MemoryCache.get(photo.url)
+    fun loadImage(context: Context, photo: Photo) {
+       val bitmap = MemoryCache.get(photo.url ?: "")
        if (bitmap != null) {
-           photo.imageView.setImageBitmap(bitmap)
+           photo.imageView?.setImageBitmap(bitmap)
        }
        else {
-           queuePhoto(activity, photo)
+           queuePhoto(context, photo)
        }
     }
 
-    private fun queuePhoto(activity: Activity, photo: Photo) {
-        val loader = Loader(activity, photo)
+    private fun queuePhoto(context: Context, photo: Photo) {
+        val loader = Loader(context, photo)
         executorService.submit(loader)
     }
 }

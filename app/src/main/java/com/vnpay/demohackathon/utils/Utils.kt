@@ -3,10 +3,13 @@ package com.vnpay.demohackathon.utils
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.widget.ImageView
 import com.vnpay.demohackathon.data.Photo
 import java.io.File
 import java.io.FileInputStream
 import java.net.URL
+import java.util.Collections
+import java.util.WeakHashMap
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -16,6 +19,7 @@ class Utils private constructor() {
         private var instance: Utils? = null
         const val NUM_THREAD = 20
         val executorService: ExecutorService = Executors.newFixedThreadPool(NUM_THREAD)
+        val views = Collections.synchronizedMap(WeakHashMap<ImageView, String>())
 
         @JvmStatic
         fun g(): Utils {
@@ -61,7 +65,8 @@ class Utils private constructor() {
     }
 
     fun loadImage(context: Context, photo: Photo) {
-       val bitmap = MemoryCache.get(photo.url ?: "")
+        views[photo.imageView] = photo.url
+        val bitmap = MemoryCache.get(photo.url ?: "")
        if (bitmap != null) {
            photo.imageView?.setImageBitmap(bitmap)
        }
